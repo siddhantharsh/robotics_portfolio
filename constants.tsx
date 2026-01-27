@@ -1,12 +1,12 @@
 import { Assignment } from './types';
 
 export const USER_INFO = {
-  name: "Anika Khajuria",
-  id: "RA2311003011736",
+  name: "Siddhant Harsh",
+  id: "RA2311003011353",
   institution: "SRMIST",
   role: "Robotics & Automation Portfolio",
-  email: "ak1234@srmist.edu.in",
-  about: "I am a B.Tech 3rd year student at SRMIST with a focused interest in Robotics and Automation. This portfolio serves as a structured digital record of my work throughout the course. It documents each assignment through automation demonstrations and corresponding technical inferences. The content reflects my practical understanding and analytical approach to automation systems."
+  email: "shars@srmist.edu.in",
+  about: "I am a B.Tech 3rd year student at SRMIST with a deep-seated interest in Robotics and Automation. This portfolio serves as a comprehensive digital record of my academic journey, documenting various assignments, simulations, and technical implementations. It showcases my ability to integrate hardware and software solutions to solve real-world automation challenges."
 };
 
 export const ASSIGNMENTS: Assignment[] = [
