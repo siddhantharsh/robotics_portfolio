@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Menu, X, ArrowUpRight, ChevronRight, Activity } from 'lucide-react';
+import { Menu, X, ArrowUpRight, ChevronRight, Activity, ExternalLink } from 'lucide-react';
 import { USER_INFO, ASSIGNMENTS } from './constants';
 import { Assignment } from './types';
 
@@ -15,6 +14,18 @@ const App: React.FC = () => {
       element.scrollIntoView({ behavior: 'smooth' });
     }
     setIsMenuOpen(false);
+  };
+
+  const getEmbedUrl = (url: string) => {
+    if (!url) return '';
+    const base = url.replace('youtube.com', 'youtube-nocookie.com');
+    const params = new URLSearchParams({
+      rel: '0',
+      modestbranding: '1',
+      showinfo: '0',
+      origin: typeof window !== 'undefined' ? window.location.origin : ''
+    });
+    return `${base}?${params.toString()}`;
   };
 
   return (
@@ -77,7 +88,7 @@ const App: React.FC = () => {
             <span className="text-zinc-600">& Automation</span>
           </h1>
           <p className="max-w-lg mx-auto text-zinc-400 text-sm md:text-base leading-relaxed mb-12 uppercase tracking-wide">
-            Digital Engineering Portfolio • Siddhant Harsh • {USER_INFO.institution}
+            Digital Engineering Portfolio • {USER_INFO.name} • {USER_INFO.institution}
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
             <a 
@@ -182,15 +193,27 @@ const App: React.FC = () => {
             <h2 className="text-3xl md:text-4xl font-black uppercase mb-8 pr-12">{selectedAssignment.title}</h2>
             
             {selectedAssignment.videoUrl ? (
-              <div className="aspect-video w-full bg-zinc-900 border border-zinc-800 mb-10 overflow-hidden relative">
-                <iframe 
-                  className="w-full h-full"
-                  src={`${selectedAssignment.videoUrl}?rel=0&modestbranding=1&autoplay=0`}
-                  title={selectedAssignment.title}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                ></iframe>
+              <div className="space-y-4 mb-10">
+                <div className="aspect-video w-full bg-zinc-900 border border-zinc-800 overflow-hidden relative group">
+                  <iframe 
+                    className="w-full h-full"
+                    src={getEmbedUrl(selectedAssignment.videoUrl)}
+                    title={selectedAssignment.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+                <div className="flex justify-end">
+                   <a 
+                    href={selectedAssignment.videoUrl.replace('/embed/', '/watch?v=')} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 hover:text-white transition-colors flex items-center gap-2"
+                  >
+                    Open in YouTube <ExternalLink size={12} />
+                  </a>
+                </div>
               </div>
             ) : (
               <div className="w-full h-48 bg-zinc-900/50 flex items-center justify-center text-zinc-600 uppercase text-xs tracking-widest mb-10 border border-zinc-800 italic">
