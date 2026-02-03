@@ -5,7 +5,7 @@ export const USER_INFO = {
   id: "RA2311003011353",
   institution: "SRMIST",
   role: "Robotics & Automation Portfolio",
-  email: "shars@srmist.edu.in",
+  email: "sh6234@srmist.edu.in",
   about: "I am a B.Tech 3rd year student at SRMIST with a deep-seated interest in Robotics and Automation. This portfolio serves as a comprehensive digital record of my academic journey, documenting various assignments, simulations, and technical implementations. It showcases my ability to integrate hardware and software solutions to solve real-world automation challenges."
 };
 
@@ -33,7 +33,7 @@ Such systems represent the future of smart infrastructure, where automation is u
     id: "3",
     title: "Assignment 3: Application-Oriented Deployment of Robots Using Non-Conventional Grippers",
     shortDescription: "Analysis of robotic suturing using specialized surgical needle drivers.",
-    videoUrl: "https://www.youtube.com/embed/Xvqs2mdWobU",
+    videoUrl: "https://www.youtube.com/watch?v=cpPofyZbvDw",
     date: "Academic Submission",
     inference: `1. Introduction
 Robotic automation has traditionally relied on rigid grippers designed for repetitive and structured tasks such as pick-and-place operations. However, many real-world applications involve deformable materials, continuous contact, and strict force constraints, making conventional grippers unsuitable. Medical robotics is one such domain where safe interaction with soft biological tissue is essential.
