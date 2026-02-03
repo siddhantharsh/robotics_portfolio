@@ -18,14 +18,25 @@ const App: React.FC = () => {
 
   const getEmbedUrl = (url: string) => {
     if (!url) return '';
-    const base = url.replace('youtube.com', 'youtube-nocookie.com');
+    // Handle both youtube.com and youtu.be links
+    let videoId = '';
+    if (url.includes('youtube.com/embed/')) {
+      videoId = url.split('embed/')[1].split('?')[0];
+    } else if (url.includes('youtube.com/watch?v=')) {
+      videoId = url.split('v=')[1].split('&')[0];
+    } else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1].split('?')[0];
+    }
+    
+    if (!videoId) return url;
+
     const params = new URLSearchParams({
       rel: '0',
       modestbranding: '1',
       showinfo: '0',
       origin: typeof window !== 'undefined' ? window.location.origin : ''
     });
-    return `${base}?${params.toString()}`;
+    return `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
   };
 
   return (
@@ -83,7 +94,7 @@ const App: React.FC = () => {
             <Activity size={12} className="text-white animate-pulse" />
             <span>Operational Systems Engineering</span>
           </div>
-          <h1 className="text-6xl md:text-9xl font-black tracking-tighter uppercase leading-[0.8] mb-6">
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase leading-[0.8] mb-6">
             Robotics<br/>
             <span className="text-zinc-600">& Automation</span>
           </h1>
@@ -151,7 +162,7 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {ASSIGNMENTS.map((assignment) => (
               <button 
                 key={assignment.id}
@@ -162,10 +173,10 @@ const App: React.FC = () => {
                   <ArrowUpRight size={24} className="text-zinc-400" />
                 </div>
                 <span className="block text-[10px] mono-font text-zinc-500 mb-6 uppercase tracking-widest">{assignment.date}</span>
-                <h4 className="text-2xl font-bold uppercase mb-4 leading-tight group-hover:text-white transition-colors">{assignment.title}</h4>
-                <p className="text-zinc-400 text-sm leading-relaxed mb-8">{assignment.shortDescription}</p>
+                <h4 className="text-xl font-bold uppercase mb-4 leading-tight group-hover:text-white transition-colors">{assignment.title}</h4>
+                <p className="text-zinc-400 text-sm leading-relaxed mb-8 line-clamp-3">{assignment.shortDescription}</p>
                 <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-100">
-                  View Technical Inference <ChevronRight size={14} />
+                  Read More <ChevronRight size={14} />
                 </div>
               </button>
             ))}
@@ -178,65 +189,71 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* Assignment Detail Modal */}
+      {/* Assignment Detail Modal / "Page" */}
       {selectedAssignment && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/90 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-zinc-950 border border-zinc-800 w-full max-w-4xl max-h-[90vh] overflow-y-auto relative p-8 md:p-12 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-6 bg-black/95 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-zinc-950 md:border md:border-zinc-800 w-full max-w-5xl h-full md:h-auto md:max-h-[90vh] overflow-y-auto relative p-8 md:p-16 shadow-2xl">
             <button 
               onClick={() => setSelectedAssignment(null)}
-              className="absolute top-6 right-6 p-2 text-zinc-500 hover:text-white transition-colors"
+              className="fixed md:absolute top-6 right-6 p-2 text-zinc-500 hover:text-white transition-colors z-50 bg-black/50 md:bg-transparent rounded-full"
             >
-              <X size={24} />
+              <X size={28} />
             </button>
 
-            <span className="text-[10px] mono-font text-zinc-500 uppercase mb-4 block tracking-widest">{selectedAssignment.date}</span>
-            <h2 className="text-3xl md:text-4xl font-black uppercase mb-8 pr-12">{selectedAssignment.title}</h2>
-            
-            {selectedAssignment.videoUrl ? (
-              <div className="space-y-4 mb-10">
-                <div className="aspect-video w-full bg-zinc-900 border border-zinc-800 overflow-hidden relative group">
-                  <iframe 
-                    className="w-full h-full"
-                    src={getEmbedUrl(selectedAssignment.videoUrl)}
-                    title={selectedAssignment.title}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  ></iframe>
+            <div className="max-w-3xl mx-auto">
+              <span className="text-[10px] mono-font text-zinc-500 uppercase mb-4 block tracking-widest">{selectedAssignment.date}</span>
+              <h2 className="text-3xl md:text-5xl font-black uppercase mb-10 leading-[1.1]">{selectedAssignment.title}</h2>
+              
+              {selectedAssignment.videoUrl ? (
+                <div className="space-y-4 mb-12">
+                  <div className="aspect-video w-full bg-zinc-900 border border-zinc-800 overflow-hidden relative group shadow-2xl">
+                    <iframe 
+                      className="w-full h-full"
+                      src={getEmbedUrl(selectedAssignment.videoUrl)}
+                      title={selectedAssignment.title}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                  <div className="flex justify-between items-center px-2">
+                     <span className="text-[10px] uppercase tracking-widest text-zinc-600 font-mono">Video Demonstration Material</span>
+                     <a 
+                      href={selectedAssignment.videoUrl.replace('/embed/', '/watch?v=')} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-[10px] uppercase tracking-widest font-bold text-zinc-400 hover:text-white transition-colors flex items-center gap-2"
+                    >
+                      Source <ExternalLink size={12} />
+                    </a>
+                  </div>
                 </div>
-                <div className="flex justify-end">
-                   <a 
-                    href={selectedAssignment.videoUrl.replace('/embed/', '/watch?v=')} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 hover:text-white transition-colors flex items-center gap-2"
-                  >
-                    Open in YouTube <ExternalLink size={12} />
-                  </a>
+              ) : (
+                <div className="w-full h-48 bg-zinc-900/50 flex items-center justify-center text-zinc-600 uppercase text-xs tracking-widest mb-12 border border-zinc-800 italic">
+                  Visual data not yet processed
+                </div>
+              )}
+
+              <div className="space-y-8">
+                <div className="flex items-center gap-4">
+                  <h3 className="text-xs uppercase tracking-widest font-black text-white bg-zinc-800 px-3 py-1">
+                    Technical Analysis
+                  </h3>
+                  <div className="flex-grow h-[1px] bg-zinc-900"></div>
+                </div>
+                <div className="text-zinc-300 leading-relaxed space-y-6 text-base md:text-lg whitespace-pre-line font-light">
+                  {selectedAssignment.inference}
                 </div>
               </div>
-            ) : (
-              <div className="w-full h-48 bg-zinc-900/50 flex items-center justify-center text-zinc-600 uppercase text-xs tracking-widest mb-10 border border-zinc-800 italic">
-                Video analysis pending
-              </div>
-            )}
 
-            <div className="space-y-6">
-              <h3 className="text-xs uppercase tracking-widest font-bold text-zinc-500 flex items-center gap-3">
-                <span className="w-6 h-[1px] bg-zinc-700"></span> Technical Inference
-              </h3>
-              <div className="text-zinc-300 leading-relaxed space-y-4 text-sm md:text-base whitespace-pre-line">
-                {selectedAssignment.inference}
+              <div className="mt-20 pt-10 border-t border-zinc-900 flex justify-center">
+                <button 
+                  onClick={() => setSelectedAssignment(null)}
+                  className="group px-12 py-4 border border-zinc-800 hover:border-white text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-3"
+                >
+                  Return to Dashboard <X size={14} className="group-hover:rotate-90 transition-transform" />
+                </button>
               </div>
-            </div>
-
-            <div className="mt-12 pt-8 border-t border-zinc-900">
-              <button 
-                onClick={() => setSelectedAssignment(null)}
-                className="px-8 py-3 bg-white text-black text-xs font-bold uppercase tracking-widest hover:bg-zinc-200"
-              >
-                Close View
-              </button>
             </div>
           </div>
         </div>
@@ -249,18 +266,18 @@ const App: React.FC = () => {
             <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-4">
               Student Information
             </h2>
-            <div className="grid md:grid-cols-3 gap-8 mt-8">
-              <div className="p-6 bg-zinc-950 border border-zinc-900">
-                <span className="block text-[10px] uppercase text-zinc-600 mb-2 tracking-widest">Name</span>
-                <span className="text-sm font-bold uppercase">{USER_INFO.name}</span>
+            <div className="grid md:grid-cols-3 gap-4 mt-8">
+              <div className="p-8 bg-zinc-950 border border-zinc-900 hover:border-zinc-700 transition-colors">
+                <span className="block text-[10px] uppercase text-zinc-600 mb-2 tracking-widest">Full Name</span>
+                <span className="text-base font-bold uppercase">{USER_INFO.name}</span>
               </div>
-              <div className="p-6 bg-zinc-950 border border-zinc-900">
-                <span className="block text-[10px] uppercase text-zinc-600 mb-2 tracking-widest">Registration ID</span>
-                <span className="text-sm font-bold uppercase">{USER_INFO.id}</span>
+              <div className="p-8 bg-zinc-950 border border-zinc-900 hover:border-zinc-700 transition-colors">
+                <span className="block text-[10px] uppercase text-zinc-600 mb-2 tracking-widest">Registration No.</span>
+                <span className="text-base font-bold uppercase mono-font">{USER_INFO.id}</span>
               </div>
-              <div className="p-6 bg-zinc-950 border border-zinc-900">
+              <div className="p-8 bg-zinc-950 border border-zinc-900 hover:border-zinc-700 transition-colors">
                 <span className="block text-[10px] uppercase text-zinc-600 mb-2 tracking-widest">Institution</span>
-                <span className="text-sm font-bold uppercase">{USER_INFO.institution}</span>
+                <span className="text-base font-bold uppercase">{USER_INFO.institution}</span>
               </div>
             </div>
           </div>
@@ -270,7 +287,7 @@ const App: React.FC = () => {
               <span className="text-sm font-bold uppercase tracking-tighter">Robotics & Automation Records</span>
             </div>
             <span className="text-[10px] uppercase text-zinc-600 tracking-widest">
-              © {new Date().getFullYear()} Internal Academic Portfolio.
+              © {new Date().getFullYear()} Siddhant Harsh • Academic Repository.
             </span>
           </div>
         </div>
