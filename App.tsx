@@ -144,18 +144,25 @@ const HomePage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate
 
   return (
     <>
-      {/* Loading Overlay */}
-      <div className={`fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center transition-opacity duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${isSplineLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-        <div className="flex flex-col items-center space-y-6">
-          <div className="w-24 h-[1px] bg-zinc-900 overflow-hidden relative">
-            <div className="absolute inset-0 bg-white w-full h-full animate-load-line origin-left"></div>
-          </div>
-          <span className="text-[10px] mono-font text-zinc-500 uppercase tracking-[0.3em] animate-pulse">Initializing Interface...</span>
-        </div>
-      </div>
-
       {/* Hero */}
-      <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden border-b border-zinc-900">
+      <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden border-b border-zinc-900 bg-black">
+        
+        {/* Loading Overlay scoped to Hero Section */}
+        <div 
+          className={`absolute inset-0 z-50 bg-black flex flex-col items-center justify-center transition-all duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isSplineLoaded ? '-translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
+          }`}
+        >
+          <div className="flex flex-col items-center space-y-6">
+            <div className="w-24 h-[1px] bg-zinc-800 overflow-hidden relative">
+              <div className="absolute inset-0 bg-white w-full h-full animate-load-line origin-left"></div>
+            </div>
+            <span className="text-[10px] mono-font text-zinc-500 uppercase tracking-[0.3em] animate-pulse">
+              Initializing Interface...
+            </span>
+          </div>
+        </div>
+
         <div className="absolute inset-0 circuit-bg opacity-30"></div>
         
         {/* Spline 3D Viewer Container */}
