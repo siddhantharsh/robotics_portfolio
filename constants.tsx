@@ -24,10 +24,24 @@ Such systems represent the future of smart infrastructure, where automation is u
   },
   {
     id: "2",
-    title: "Assignment 2: Industrial Workflow Simulation",
-    shortDescription: "Modeling of sequential automation in manufacturing environments.",
+    title: "Assignment 2: Operations Performed by Robot",
+    shortDescription: "Analysis of Boston Dynamics' Atlas robot performing parkour and dynamic locomotion.",
+    videoUrl: "https://www.youtube.com/watch?v=fn3KWM1kuAw",
     date: "Academic Submission",
-    inference: "This assignment explores the simulation of fixed-sequence automation in heavy industry. It focuses on the synchronization between robotic arms and conveyor systems to maintain consistent quality across large-scale production batches."
+    inference: `This video shows Boston Dynamics’ Atlas robot performing parkour and dynamic locomotion.
+It is widely accepted in robotics courses, always available, and clearly demonstrates multiple robot operations.
+
+Operations Performed:
+
+In the video, the robot first initializes its system and prepares for movement by stabilizing its posture. It uses onboard sensors to maintain balance and ensure correct body alignment before starting any motion.
+
+The robot then performs dynamic locomotion. It walks, runs, and jumps while continuously adjusting its center of mass. During these movements, it coordinates multiple joints in its legs and torso to maintain stability.
+
+The robot demonstrates obstacle navigation by identifying platforms and gaps in its path. It plans its movements in advance and executes precise jumps to move from one surface to another without losing balance.
+
+The robot also performs mid-air posture correction. While jumping, it adjusts its body orientation to ensure safe landing. This requires real-time motion planning and fast sensor feedback.
+
+Throughout the video, the robot continuously collects sensor data, evaluates its environment, makes real-time decisions, and executes coordinated motor actions. These operations allow the robot to move efficiently and safely in a dynamic and unstructured environment.`
   },
   {
     id: "3",
