@@ -26,6 +26,24 @@ const getEmbedUrl = (url: string) => {
   return `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
 };
 
+// Custom Dark Veil Component (ReactBits-inspired)
+const DarkVeil: React.FC = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 bg-[#050505]">
+    {/* SVG Noise Texture Overlay */}
+    <svg className="absolute inset-0 w-full h-full opacity-[0.15] mix-blend-overlay z-10 pointer-events-none">
+      <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      </filter>
+      <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+    </svg>
+    
+    {/* Animated Dark Greyish Gradients */}
+    <div className="absolute top-[-20%] left-[-10%] w-[120%] h-[120%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-700/10 via-zinc-900/5 to-transparent blur-[120px] veil-blob-1 mix-blend-screen"></div>
+    <div className="absolute bottom-[-30%] right-[-20%] w-[150%] h-[150%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-600/10 via-zinc-800/5 to-transparent blur-[140px] veil-blob-2 mix-blend-screen"></div>
+    <div className="absolute top-[20%] left-[20%] w-[100%] h-[100%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-500/5 via-zinc-900/10 to-transparent blur-[100px] veil-blob-3 mix-blend-screen"></div>
+  </div>
+);
+
 const Navigation: React.FC<{ onNavigate: (hash: string) => void, currentPath: string }> = ({ onNavigate, currentPath }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -63,7 +81,7 @@ const Navigation: React.FC<{ onNavigate: (hash: string) => void, currentPath: st
 };
 
 const Footer: React.FC = () => (
-  <footer className="bg-black pt-24 pb-12 px-6 border-t border-zinc-900">
+  <footer className="bg-black pt-24 pb-12 px-6 border-t border-zinc-900 relative z-20">
     <div className="max-w-6xl mx-auto">
       <div className="mb-12">
         <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-4">
@@ -106,23 +124,33 @@ const HomePage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate
       {/* Hero */}
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden border-b border-zinc-900">
         <div className="absolute inset-0 circuit-bg opacity-30"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/[0.02] rounded-full blur-[120px]"></div>
         
-        <div className="relative z-10 text-center px-6">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/50 text-[10px] uppercase tracking-widest mb-8 text-zinc-400">
+        {/* Spline 3D Viewer Container */}
+        <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-auto flex items-center justify-center">
+          {/* @ts-ignore */}
+          <spline-viewer url="https://prod.spline.design/1vHIfPyosrR42xOF/scene.splinecode"></spline-viewer>
+        </div>
+
+        {/* Gradient overlays to ensure text remains legible over the 3D model */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80 z-0 pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-black/40 rounded-full blur-[120px] pointer-events-none z-0"></div>
+
+        {/* Content wrapper with pointer-events-none so user can interact with the 3D scene behind the text */}
+        <div className="relative z-10 text-center px-6 pointer-events-none flex flex-col items-center">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/50 text-[10px] uppercase tracking-widest mb-8 text-zinc-300 backdrop-blur-sm pointer-events-auto">
             <Activity size={12} className="text-white animate-pulse" />
             <span>Operational Systems Engineering</span>
           </div>
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase leading-[0.8] mb-6">
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase leading-[0.8] mb-6 drop-shadow-2xl">
             Robotics<br/>
-            <span className="text-zinc-600">& Automation</span>
+            <span className="text-zinc-400">& Automation</span>
           </h1>
-          <p className="max-w-lg mx-auto text-zinc-400 text-sm md:text-base leading-relaxed mb-12 uppercase tracking-wide">
+          <p className="max-w-lg mx-auto text-zinc-300 text-sm md:text-base leading-relaxed mb-12 uppercase tracking-wide drop-shadow-md">
             Digital Engineering Portfolio • {USER_INFO.name} • {USER_INFO.institution}
           </p>
           <button 
             onClick={() => document.getElementById('assignments')?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-10 py-4 bg-white text-black font-bold uppercase text-xs tracking-widest hover:bg-zinc-200 transition-all flex items-center justify-center gap-2"
+            className="pointer-events-auto px-10 py-4 bg-white text-black font-bold uppercase text-xs tracking-widest hover:bg-zinc-200 transition-all flex items-center justify-center gap-2"
           >
             Explore Work <ArrowUpRight size={16} />
           </button>
@@ -130,7 +158,7 @@ const HomePage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate
       </section>
 
       {/* About */}
-      <section id="about" className="py-24 md:py-40 bg-zinc-950 px-6 border-b border-zinc-900">
+      <section id="about" className="py-24 md:py-40 bg-zinc-950 px-6 border-b border-zinc-900 relative z-20">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-start">
           <div>
             <h2 className="text-xs uppercase tracking-[0.3em] text-zinc-500 mb-4 flex items-center gap-2">
@@ -158,9 +186,11 @@ const HomePage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate
         </div>
       </section>
 
-      {/* Assignments Grid */}
-      <section id="assignments" className="py-24 md:py-40 px-6 bg-black">
-        <div className="max-w-6xl mx-auto">
+      {/* Assignments Grid with Dark Veil Background */}
+      <section id="assignments" className="py-24 md:py-40 px-6 relative overflow-hidden">
+        <DarkVeil />
+        
+        <div className="max-w-6xl mx-auto relative z-10">
           <div className="flex items-end justify-between mb-20">
             <div>
               <h2 className="text-xs uppercase tracking-[0.3em] text-zinc-500 mb-4 flex items-center gap-2">
@@ -178,7 +208,7 @@ const HomePage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate
                 key={assignment.id}
                 href={`#/assignment/${assignment.id}`}
                 onClick={(e) => { e.preventDefault(); onNavigate(`#/assignment/${assignment.id}`); }}
-                className="group relative bg-zinc-900/40 border border-zinc-800 p-8 text-left hover:bg-zinc-900 hover:border-zinc-500 transition-all duration-500 overflow-hidden block"
+                className="group relative bg-zinc-950/60 backdrop-blur-sm border border-zinc-800/80 p-8 text-left hover:bg-zinc-900/80 hover:border-zinc-500 transition-all duration-500 overflow-hidden block shadow-2xl"
               >
                 <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 transition-transform">
                   <ArrowUpRight size={24} className="text-zinc-400" />
@@ -191,7 +221,7 @@ const HomePage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate
                 </div>
               </a>
             ))}
-            <div className="flex flex-col items-center justify-center p-8 border border-zinc-900 border-dashed rounded-sm bg-zinc-950/50">
+            <div className="flex flex-col items-center justify-center p-8 border border-zinc-900/50 border-dashed rounded-sm bg-zinc-950/30 backdrop-blur-sm">
               <span className="text-zinc-600 text-[10px] uppercase tracking-[0.3em] mb-2 italic">Awaiting Next Module</span>
               <div className="w-12 h-[1px] bg-zinc-800"></div>
             </div>
@@ -208,19 +238,24 @@ const AssignmentPage: React.FC<{ id: string, onNavigate: (path: string) => void 
 
   if (!assignment) {
     return (
-      <div className="min-h-screen pt-40 flex flex-col items-center">
-        <h1 className="text-4xl font-bold uppercase mb-8">Assignment Not Found</h1>
-        <button onClick={() => onNavigate('#/')} className="text-sm font-bold underline">Go Back Home</button>
+      <div className="min-h-screen pt-40 flex flex-col items-center relative overflow-hidden">
+        <DarkVeil />
+        <div className="relative z-10 text-center">
+          <h1 className="text-4xl font-bold uppercase mb-8">Assignment Not Found</h1>
+          <button onClick={() => onNavigate('#/')} className="text-sm font-bold underline">Go Back Home</button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-32 pb-24 px-6 bg-black">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen pt-32 pb-24 px-6 relative overflow-hidden">
+      <DarkVeil />
+      
+      <div className="max-w-4xl mx-auto relative z-10 bg-black/40 p-8 md:p-12 rounded-2xl backdrop-blur-md border border-zinc-900/50 shadow-2xl">
         <button 
           onClick={() => onNavigate('#/')}
-          className="group flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-zinc-500 hover:text-white mb-12 transition-colors"
+          className="group flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-zinc-400 hover:text-white mb-12 transition-colors bg-zinc-900/50 px-4 py-2 rounded-full border border-zinc-800"
         >
           <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
         </button>
@@ -230,7 +265,7 @@ const AssignmentPage: React.FC<{ id: string, onNavigate: (path: string) => void 
         
         {assignment.videoUrl ? (
           <div className="space-y-4 mb-16">
-            <div className="aspect-video w-full bg-zinc-900 border border-zinc-800 overflow-hidden relative shadow-2xl">
+            <div className="aspect-video w-full bg-zinc-950 border border-zinc-800 overflow-hidden relative shadow-2xl rounded-lg">
               <iframe 
                 className="w-full h-full"
                 src={getEmbedUrl(assignment.videoUrl)}
@@ -241,7 +276,7 @@ const AssignmentPage: React.FC<{ id: string, onNavigate: (path: string) => void 
               ></iframe>
             </div>
             <div className="flex justify-between items-center px-2">
-               <span className="text-[10px] uppercase tracking-widest text-zinc-600 font-mono">Technical Video Reference</span>
+               <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-mono">Technical Video Reference</span>
                <a 
                 href={assignment.videoUrl.replace('/embed/', '/watch?v=')} 
                 target="_blank" 
@@ -253,34 +288,36 @@ const AssignmentPage: React.FC<{ id: string, onNavigate: (path: string) => void 
             </div>
           </div>
         ) : (
-          <div className="w-full h-48 bg-zinc-900/50 flex items-center justify-center text-zinc-600 uppercase text-xs tracking-widest mb-16 border border-zinc-800 italic">
+          <div className="w-full h-48 bg-zinc-950/50 flex items-center justify-center text-zinc-600 uppercase text-xs tracking-widest mb-16 border border-zinc-800/50 rounded-lg italic shadow-inner">
             Visual Documentation Pending
           </div>
         )}
 
         <div className="space-y-8">
           <div className="flex items-center gap-4">
-            <h3 className="text-xs uppercase tracking-widest font-black text-white bg-zinc-800 px-3 py-1">
+            <h3 className="text-xs uppercase tracking-widest font-black text-white bg-zinc-800/80 px-4 py-1.5 rounded-sm">
               Technical Analysis
             </h3>
-            <div className="flex-grow h-[1px] bg-zinc-900"></div>
+            <div className="flex-grow h-[1px] bg-zinc-800"></div>
           </div>
-          <div className="text-zinc-300 leading-relaxed space-y-6 text-base md:text-lg whitespace-pre-line font-light assignment-content">
+          <div className="text-zinc-300 leading-relaxed space-y-6 text-base md:text-lg whitespace-pre-line font-light">
             {assignment.inference}
           </div>
         </div>
 
-        <div className="mt-24 pt-10 border-t border-zinc-900 flex justify-between items-center">
+        <div className="mt-24 pt-10 border-t border-zinc-800/50 flex justify-between items-center">
           <button 
             onClick={() => onNavigate('#/')}
-            className="px-10 py-4 border border-zinc-800 hover:border-white text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-widest transition-all"
+            className="px-10 py-4 border border-zinc-700 hover:border-white hover:bg-white hover:text-black text-zinc-300 text-xs font-bold uppercase tracking-widest transition-all rounded-sm"
           >
-            Dashboard
+            Return Home
           </button>
-          <span className="text-[10px] uppercase tracking-[0.3em] text-zinc-700">SRMIST • {USER_INFO.name}</span>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-zinc-600">SRMIST • {USER_INFO.name}</span>
         </div>
       </div>
-      <Footer />
+      <div className="mt-24">
+        <Footer />
+      </div>
     </div>
   );
 };
@@ -296,7 +333,7 @@ const App: React.FC = () => {
 
   const navigate = (newPath: string) => {
     window.location.hash = newPath;
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const renderContent = () => {
@@ -310,7 +347,10 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-black text-zinc-100 selection:bg-white selection:text-black">
       <Navigation onNavigate={navigate} currentPath={path} />
-      {renderContent()}
+      {/* Wrapper for CSS Page Transition */}
+      <div key={path} className="page-transition">
+        {renderContent()}
+      </div>
     </div>
   );
 };

@@ -8,6 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Spline 3D Viewer Script -->
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.51/build/spline-viewer.js"></script>
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -18,6 +22,41 @@
         .mono-font {
             font-family: 'JetBrains+Mono', monospace;
         }
+        
+        /* Spline viewer overrides to ensure full screen */
+        spline-viewer {
+            width: 100% !important;
+            height: 100% !important;
+            display: block !important;
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            outline: none;
+            border: none;
+        }
+
+        /* Page Transition Animation */
+        @keyframes pageFadeIn {
+            0% { opacity: 0; transform: translateY(20px); filter: blur(8px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+        .page-transition {
+            animation: pageFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            will-change: transform, opacity, filter;
+        }
+
+        /* Dark Veil Background Animations */
+        @keyframes veil-drift {
+            0% { transform: translate(0%, 0%) scale(1) rotate(0deg); opacity: 0.4; }
+            50% { transform: translate(4%, 8%) scale(1.15) rotate(3deg); opacity: 0.7; }
+            100% { transform: translate(-3%, 4%) scale(0.95) rotate(-3deg); opacity: 0.4; }
+        }
+        .veil-blob-1 { animation: veil-drift 22s infinite alternate ease-in-out; }
+        .veil-blob-2 { animation: veil-drift 28s infinite alternate-reverse ease-in-out; animation-delay: -5s; }
+        .veil-blob-3 { animation: veil-drift 35s infinite alternate ease-in-out; animation-delay: -12s; }
+
         /* Circuit board pattern */
         .circuit-bg {
             background-image: 
