@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, ArrowUpRight, ChevronRight, Activity, ExternalLink, Mail, ArrowLeft } from 'lucide-react';
 import { USER_INFO, ASSIGNMENTS } from './constants';
 import { Assignment } from './types';
@@ -119,16 +119,49 @@ const Footer: React.FC = () => (
 );
 
 const HomePage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate }) => {
+  const splineRef = useRef<HTMLElement | null>(null);
+  const [isSplineLoaded, setIsSplineLoaded] = useState(false);
+
+  useEffect(() => {
+    const splineEl = splineRef.current;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const handleLoad = () => setIsSplineLoaded(true);
+
+    if (splineEl) {
+      splineEl.addEventListener('load', handleLoad);
+      // Safety timeout: dismiss loading screen after 8 seconds if model fails to load
+      timeoutId = setTimeout(handleLoad, 8000);
+    } else {
+      setIsSplineLoaded(true);
+    }
+
+    return () => {
+      if (splineEl) splineEl.removeEventListener('load', handleLoad);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   return (
     <>
+      {/* Loading Overlay */}
+      <div className={`fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center transition-opacity duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${isSplineLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <div className="flex flex-col items-center space-y-6">
+          <div className="w-24 h-[1px] bg-zinc-900 overflow-hidden relative">
+            <div className="absolute inset-0 bg-white w-full h-full animate-load-line origin-left"></div>
+          </div>
+          <span className="text-[10px] mono-font text-zinc-500 uppercase tracking-[0.3em] animate-pulse">Initializing Interface...</span>
+        </div>
+      </div>
+
       {/* Hero */}
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden border-b border-zinc-900">
         <div className="absolute inset-0 circuit-bg opacity-30"></div>
         
         {/* Spline 3D Viewer Container */}
-        <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-auto flex items-center justify-center">
+        <div className={`absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-auto flex items-center justify-center transition-opacity duration-1000 ${isSplineLoaded ? 'opacity-100' : 'opacity-0'}`}>
           {/* @ts-ignore */}
-          <spline-viewer url="https://prod.spline.design/1vHIfPyosrR42xOF/scene.splinecode"></spline-viewer>
+          <spline-viewer ref={splineRef} url="https://prod.spline.design/1vHIfPyosrR42xOF/scene.splinecode"></spline-viewer>
         </div>
 
         {/* Gradient overlays to ensure text remains legible over the 3D model */}
