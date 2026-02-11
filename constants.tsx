@@ -42,17 +42,20 @@ Such deployments represent a significant advancement over traditional automated 
   {
     id: "2",
     title: "Assignment 2: Operations Performed by Robot",
-    shortDescription: "Analysis of Boston Dynamics' Atlas robot performing parkour and dynamic locomotion.",
+    shortDescription: "Analysis of Boston Dynamics' Atlas robot performing parkour and dynamic locomotion, highlighting its degrees of freedom.",
     videoUrl: "https://www.youtube.com/watch?v=fn3KWM1kuAw",
     date: "Academic Submission",
     inference: `This video shows Boston Dynamics’ Atlas robot performing parkour and dynamic locomotion.
 It is widely accepted in robotics courses, always available, and clearly demonstrates multiple robot operations.
 
+Degrees of Freedom (DoF):
+The Atlas robot featured in this demonstration is equipped with 28 degrees of freedom (DoF), actuated by a custom hydraulic system. This high number of independent joint movements provides the sophisticated articulation of its arms, legs, and torso required to maintain dynamic balance, execute complex parkour maneuvers, and instantly adapt to uneven terrain.
+
 Operations Performed:
 
 In the video, the robot first initializes its system and prepares for movement by stabilizing its posture. It uses onboard sensors to maintain balance and ensure correct body alignment before starting any motion.
 
-The robot then performs dynamic locomotion. It walks, runs, and jumps while continuously adjusting its center of mass. During these movements, it coordinates multiple joints in its legs and torso to maintain stability.
+The robot then performs dynamic locomotion. It walks, runs, and jumps while continuously adjusting its center of mass. During these movements, it coordinates multiple joints (utilizing its 28 DoF) in its legs and torso to maintain stability.
 
 The robot demonstrates obstacle navigation by identifying platforms and gaps in its path. It plans its movements in advance and executes precise jumps to move from one surface to another without losing balance.
 
