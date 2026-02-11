@@ -111,7 +111,7 @@ const Footer: React.FC = () => (
       <div className="pt-12 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-6">
         <span className="text-sm font-bold uppercase tracking-tighter">Robotics & Automation Records</span>
         <span className="text-[10px] uppercase text-zinc-600 tracking-widest">
-          © {new Date().getFullYear()} Siddhant Harsh • Academic Repository.
+          © {new Date().getFullYear()} {USER_INFO.name} • Academic Repository.
         </span>
       </div>
     </div>
@@ -124,19 +124,27 @@ const HomePage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate
 
   useEffect(() => {
     const splineEl = splineRef.current;
+    let isMounted = true;
     let timeoutId: ReturnType<typeof setTimeout>;
 
-    const handleLoad = () => setIsSplineLoaded(true);
+    const handleLoad = () => {
+      if (isMounted) setIsSplineLoaded(true);
+    };
 
     if (splineEl) {
       splineEl.addEventListener('load', handleLoad);
-      // Safety timeout: dismiss loading screen after 8 seconds if model fails to load
-      timeoutId = setTimeout(handleLoad, 8000);
+      
+      // Safety timeout: dismiss loading screen after 2.5 seconds max. 
+      // Slower laptops might take longer to load WebGL; we don't want them stuck on a loader.
+      timeoutId = setTimeout(() => {
+        if (isMounted) setIsSplineLoaded(true);
+      }, 2500);
     } else {
       setIsSplineLoaded(true);
     }
 
     return () => {
+      isMounted = false;
       if (splineEl) splineEl.removeEventListener('load', handleLoad);
       clearTimeout(timeoutId);
     };
