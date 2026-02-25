@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -16,53 +19,72 @@
             color: #fff;
             scroll-behavior: smooth;
         }
+
         .mono-font {
             font-family: 'JetBrains+Mono', monospace;
         }
 
         /* Loading Animation */
         @keyframes load-line {
-            0% { transform: translateX(-100%); }
-            50% { transform: translateX(100%); }
-            100% { transform: translateX(100%); }
+            0% {
+                transform: translateX(-100%);
+            }
+
+            50% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
         }
+
         .animate-load-line {
             animation: load-line 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
 
         /* Page Transition Animation */
         @keyframes pageFadeIn {
-            0% { opacity: 0; transform: translateY(20px); filter: blur(8px); }
-            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+                filter: blur(8px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
         }
+
         .page-transition {
             animation: pageFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             will-change: transform, opacity, filter;
         }
 
-        /* Dark Veil Background Animations */
-        @keyframes veil-drift {
-            0% { transform: translate(0%, 0%) scale(1) rotate(0deg); opacity: 0.4; }
-            50% { transform: translate(4%, 8%) scale(1.15) rotate(3deg); opacity: 0.7; }
-            100% { transform: translate(-3%, 4%) scale(0.95) rotate(-3deg); opacity: 0.4; }
-        }
-        .veil-blob-1 { animation: veil-drift 22s infinite alternate ease-in-out; }
-        .veil-blob-2 { animation: veil-drift 28s infinite alternate-reverse ease-in-out; animation-delay: -5s; }
-        .veil-blob-3 { animation: veil-drift 35s infinite alternate ease-in-out; animation-delay: -12s; }
+        /* Unused animations have been removed for optimization */
 
         /* Circuit board pattern */
         .circuit-bg {
-            background-image: 
-                radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-image:
+                radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
             background-size: 40px 40px;
         }
+
         @keyframes scan {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100vh); }
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100vh);
+            }
         }
+
         .scanline {
             height: 2px;
-            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.1), transparent);
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.1), transparent);
             position: fixed;
             top: 0;
             left: 0;
@@ -72,7 +94,7 @@
             animation: scan 8s linear infinite;
         }
     </style>
-<script type="importmap">
+    <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@^19.2.4",
@@ -85,10 +107,12 @@
 }
 </script>
 </head>
+
 <body>
     <div id="root"></div>
     <div class="scanline"></div>
     <!-- Entry point for the application -->
     <script type="module" src="./index.tsx"></script>
 </body>
+
 </html>

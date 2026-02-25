@@ -27,21 +27,9 @@ const getEmbedUrl = (url: string) => {
   return `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
 };
 
-// Custom Dark Veil Component (ReactBits-inspired)
+// Custom Dark Veil Component (Optimized for Performance)
 const DarkVeil: React.FC = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 bg-[#050505]">
-    {/* SVG Noise Texture Overlay */}
-    <svg className="absolute inset-0 w-full h-full opacity-[0.15] mix-blend-overlay z-10 pointer-events-none">
-      <filter id="noiseFilter">
-        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-      </filter>
-      <rect width="100%" height="100%" filter="url(#noiseFilter)" />
-    </svg>
-
-    {/* Animated Dark Greyish Gradients */}
-    <div className="absolute top-[-20%] left-[-10%] w-[120%] h-[120%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-700/10 via-zinc-900/5 to-transparent blur-[120px] veil-blob-1 mix-blend-screen"></div>
-    <div className="absolute bottom-[-30%] right-[-20%] w-[150%] h-[150%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-600/10 via-zinc-800/5 to-transparent blur-[140px] veil-blob-2 mix-blend-screen"></div>
-    <div className="absolute top-[20%] left-[20%] w-[100%] h-[100%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-500/5 via-zinc-900/10 to-transparent blur-[100px] veil-blob-3 mix-blend-screen"></div>
+  <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 bg-[#050505] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900/20 via-[#050505] to-[#050505]">
   </div>
 );
 
