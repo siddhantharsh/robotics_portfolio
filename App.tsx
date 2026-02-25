@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import * as React from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Menu, X, ArrowUpRight, ChevronRight, Activity, ExternalLink, Mail, ArrowLeft } from 'lucide-react';
 import { USER_INFO, ASSIGNMENTS } from './constants';
 import { Assignment } from './types';
+import FaultyTerminal from './FaultyTerminal';
+import Squares from './Squares';
 
 // Helper to handle video embedding
 const getEmbedUrl = (url: string) => {
@@ -14,7 +17,7 @@ const getEmbedUrl = (url: string) => {
   } else if (url.includes('youtu.be/')) {
     videoId = url.split('youtu.be/')[1].split('?')[0];
   }
-  
+
   if (!videoId) return url;
 
   const params = new URLSearchParams({
@@ -32,11 +35,11 @@ const DarkVeil: React.FC = () => (
     {/* SVG Noise Texture Overlay */}
     <svg className="absolute inset-0 w-full h-full opacity-[0.15] mix-blend-overlay z-10 pointer-events-none">
       <filter id="noiseFilter">
-        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
       </filter>
-      <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+      <rect width="100%" height="100%" filter="url(#noiseFilter)" />
     </svg>
-    
+
     {/* Animated Dark Greyish Gradients */}
     <div className="absolute top-[-20%] left-[-10%] w-[120%] h-[120%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-700/10 via-zinc-900/5 to-transparent blur-[120px] veil-blob-1 mix-blend-screen"></div>
     <div className="absolute bottom-[-30%] right-[-20%] w-[150%] h-[150%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-600/10 via-zinc-800/5 to-transparent blur-[140px] veil-blob-2 mix-blend-screen"></div>
@@ -54,7 +57,7 @@ const Navigation: React.FC<{ onNavigate: (hash: string) => void, currentPath: st
           <span className="font-bold text-lg tracking-tighter uppercase">{USER_INFO.name}</span>
           <span className="text-[10px] mono-font text-zinc-500 uppercase">{USER_INFO.id} • {USER_INFO.institution}</span>
         </a>
-        
+
         <div className="hidden md:flex items-center space-x-8 text-sm font-medium uppercase tracking-widest">
           <a href="#/" onClick={() => onNavigate('#/')} className="hover:text-white transition-colors">Home</a>
           <a href="#/assignments" onClick={() => {
@@ -63,7 +66,7 @@ const Navigation: React.FC<{ onNavigate: (hash: string) => void, currentPath: st
           }} className="hover:text-white transition-colors">Assignments</a>
         </div>
 
-        <button 
+        <button
           className="md:hidden p-2 text-zinc-400 hover:text-white"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
@@ -119,47 +122,25 @@ const Footer: React.FC = () => (
 );
 
 const HomePage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate }) => {
-  const splineRef = useRef<HTMLElement | null>(null);
-  const [isSplineLoaded, setIsSplineLoaded] = useState(false);
+  const [isNetworkLoaded, setIsNetworkLoaded] = useState(false);
 
   useEffect(() => {
-    const splineEl = splineRef.current;
-    let isMounted = true;
-    let timeoutId: ReturnType<typeof setTimeout>;
+    let timeoutId = setTimeout(() => {
+      setIsNetworkLoaded(true);
+    }, 800); // Quick initialization sequence
 
-    const handleLoad = () => {
-      if (isMounted) setIsSplineLoaded(true);
-    };
-
-    if (splineEl) {
-      splineEl.addEventListener('load', handleLoad);
-      
-      // Safety timeout: dismiss loading screen after 2.5 seconds max. 
-      // Slower laptops might take longer to load WebGL; we don't want them stuck on a loader.
-      timeoutId = setTimeout(() => {
-        if (isMounted) setIsSplineLoaded(true);
-      }, 2500);
-    } else {
-      setIsSplineLoaded(true);
-    }
-
-    return () => {
-      isMounted = false;
-      if (splineEl) splineEl.removeEventListener('load', handleLoad);
-      clearTimeout(timeoutId);
-    };
+    return () => clearTimeout(timeoutId);
   }, []);
 
   return (
     <>
       {/* Hero */}
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden border-b border-zinc-900 bg-black">
-        
+
         {/* Loading Overlay scoped to Hero Section */}
-        <div 
-          className={`absolute inset-0 z-50 bg-black flex flex-col items-center justify-center transition-all duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            isSplineLoaded ? '-translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
-          }`}
+        <div
+          className={`absolute inset-0 z-50 bg-black flex flex-col items-center justify-center transition-all duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${isNetworkLoaded ? '-translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
+            }`}
         >
           <div className="flex flex-col items-center space-y-6">
             <div className="w-24 h-[1px] bg-zinc-800 overflow-hidden relative">
@@ -171,12 +152,29 @@ const HomePage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate
           </div>
         </div>
 
-        <div className="absolute inset-0 circuit-bg opacity-30"></div>
-        
-        {/* Spline 3D Viewer Container */}
-        <div className={`absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-auto flex items-center justify-center transition-opacity duration-1000 ${isSplineLoaded ? 'opacity-100' : 'opacity-0'}`}>
-          {/* @ts-ignore */}
-          <spline-viewer ref={splineRef} url="https://prod.spline.design/1vHIfPyosrR42xOF/scene.splinecode"></spline-viewer>
+        {/* Interactive Faulty Terminal System */}
+        <div className={`absolute inset-0 w-full h-full z-0 overflow-hidden flex items-center justify-center transition-opacity duration-1000 ${isNetworkLoaded ? 'opacity-100' : 'opacity-0'}`}>
+          <div style={{ width: '100%', height: '100%', position: 'absolute' }}>
+            <FaultyTerminal
+              scale={1.5}
+              gridMul={[2, 1]}
+              digitSize={1.2}
+              timeScale={0.5}
+              pause={false}
+              scanlineIntensity={0.5}
+              glitchAmount={1}
+              flickerAmount={1}
+              noiseAmp={1}
+              chromaticAberration={0}
+              dither={0}
+              curvature={0.1}
+              tint="#c0bfbc"
+              mouseReact
+              mouseStrength={0.5}
+              pageLoadAnimation
+              brightness={0.6}
+            />
+          </div>
         </div>
 
         {/* Gradient overlays to ensure text remains legible over the 3D model */}
@@ -190,13 +188,13 @@ const HomePage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate
             <span>Operational Systems Engineering</span>
           </div>
           <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase leading-[0.8] mb-6 drop-shadow-2xl">
-            Robotics<br/>
+            Robotics<br />
             <span className="text-zinc-400">& Automation</span>
           </h1>
           <p className="max-w-lg mx-auto text-zinc-300 text-sm md:text-base leading-relaxed mb-12 uppercase tracking-wide drop-shadow-md">
             Digital Engineering Portfolio • {USER_INFO.name} • {USER_INFO.institution}
           </p>
-          <button 
+          <button
             onClick={() => document.getElementById('assignments')?.scrollIntoView({ behavior: 'smooth' })}
             className="pointer-events-auto px-10 py-4 bg-white text-black font-bold uppercase text-xs tracking-widest hover:bg-zinc-200 transition-all flex items-center justify-center gap-2"
           >
@@ -237,7 +235,7 @@ const HomePage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate
       {/* Assignments Grid with Dark Veil Background */}
       <section id="assignments" className="py-24 md:py-40 px-6 relative overflow-hidden">
         <DarkVeil />
-        
+
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="flex items-end justify-between mb-20">
             <div>
@@ -252,7 +250,7 @@ const HomePage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {ASSIGNMENTS.map((assignment) => (
-              <a 
+              <a
                 key={assignment.id}
                 href={`#/assignment/${assignment.id}`}
                 onClick={(e) => { e.preventDefault(); onNavigate(`#/assignment/${assignment.id}`); }}
@@ -299,9 +297,18 @@ const AssignmentPage: React.FC<{ id: string, onNavigate: (path: string) => void 
   return (
     <div className="min-h-screen pt-32 pb-24 px-6 relative overflow-hidden">
       <DarkVeil />
-      
+      <div className="absolute inset-0 z-0">
+        <Squares
+          direction="diagonal"
+          speed={0.5}
+          squareSize={40}
+          borderColor="#271E37"
+          hoverFillColor="#222222"
+        />
+      </div>
+
       <div className="max-w-4xl mx-auto relative z-10 bg-black/40 p-8 md:p-12 rounded-2xl backdrop-blur-md border border-zinc-900/50 shadow-2xl">
-        <button 
+        <button
           onClick={() => onNavigate('#/')}
           className="group flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-zinc-400 hover:text-white mb-12 transition-colors bg-zinc-900/50 px-4 py-2 rounded-full border border-zinc-800"
         >
@@ -310,11 +317,11 @@ const AssignmentPage: React.FC<{ id: string, onNavigate: (path: string) => void 
 
         <span className="text-[10px] mono-font text-zinc-500 uppercase mb-4 block tracking-widest">{assignment.date}</span>
         <h1 className="text-3xl md:text-5xl font-black uppercase mb-12 leading-[1.1]">{assignment.title}</h1>
-        
+
         {assignment.videoUrl ? (
           <div className="space-y-4 mb-16">
             <div className="aspect-video w-full bg-zinc-950 border border-zinc-800 overflow-hidden relative shadow-2xl rounded-lg">
-              <iframe 
+              <iframe
                 className="w-full h-full"
                 src={getEmbedUrl(assignment.videoUrl)}
                 title={assignment.title}
@@ -324,14 +331,35 @@ const AssignmentPage: React.FC<{ id: string, onNavigate: (path: string) => void 
               ></iframe>
             </div>
             <div className="flex justify-between items-center px-2">
-               <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-mono">Technical Video Reference</span>
-               <a 
-                href={assignment.videoUrl.replace('/embed/', '/watch?v=')} 
-                target="_blank" 
+              <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-mono">Technical Video Reference</span>
+              <a
+                href={assignment.videoUrl.replace('/embed/', '/watch?v=')}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-[10px] uppercase tracking-widest font-bold text-zinc-400 hover:text-white transition-colors flex items-center gap-2"
               >
                 External Link <ExternalLink size={12} />
+              </a>
+            </div>
+          </div>
+        ) : assignment.pdfUrl ? (
+          <div className="space-y-4 mb-16">
+            <div className="w-full aspect-[1/1.4] bg-zinc-950 border border-zinc-800 overflow-hidden relative shadow-2xl rounded-lg md:aspect-[1/1.2]">
+              <iframe
+                src={`${assignment.pdfUrl}#view=FitH`}
+                className="w-full h-full rounded-lg"
+                title={assignment.title}
+              ></iframe>
+            </div>
+            <div className="flex justify-between items-center px-2">
+              <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-mono">Embedded PDF Documentation</span>
+              <a
+                href={assignment.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[10px] uppercase tracking-widest font-bold text-zinc-400 hover:text-white transition-colors flex items-center gap-2"
+              >
+                Open PDF <ExternalLink size={12} />
               </a>
             </div>
           </div>
@@ -354,7 +382,7 @@ const AssignmentPage: React.FC<{ id: string, onNavigate: (path: string) => void 
         </div>
 
         <div className="mt-24 pt-10 border-t border-zinc-800/50 flex justify-between items-center">
-          <button 
+          <button
             onClick={() => onNavigate('#/')}
             className="px-10 py-4 border border-zinc-700 hover:border-white hover:bg-white hover:text-black text-zinc-300 text-xs font-bold uppercase tracking-widest transition-all rounded-sm"
           >

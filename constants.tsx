@@ -123,5 +123,24 @@ The demonstration validates the role of compliant, force-controlled grippers in 
 This assignment demonstrates that non-conventional grippers are crucial for deploying robots in medical applications. The surgical suturing task clearly illustrates manipulation that goes beyond pick-and-place operations, requiring continuous contact, force regulation, and precision.
 
 The use of specialized surgical grippers enables robots to perform tasks that are otherwise infeasible with conventional gripper designs, highlighting their importance in advanced robotic systems.`
+  },
+  {
+    id: "4",
+    title: "Inverse Kinematics of a 2R Planar Manipulator",
+    shortDescription: "The objective of this assignment was to determine the precise joint angles (θ1 and θ2) required for a two-link (2R) planar robotic manipulator to reach a specific target coordinate in space.",
+    date: "Academic Submission",
+    pdfUrl: "/robotics_assignment_4.pdf",
+    inference: `Assignment Overview
+The objective of this assignment was to determine the precise joint angles (θ1 and θ2) required for a two-link (2R) planar robotic manipulator to reach a specific target coordinate in space.
+
+Methodology and Approach
+To accomplish this, the solution was approached in two distinct phases:
+
+Theoretical Derivation: We first established the inverse kinematics equations from first principles. By analyzing the geometric relationships of the manipulator and inverting the forward kinematics equations, we derived the exact mathematical formulas required to calculate the base and elbow joint angles.
+
+Numerical Application: Using the derived formulas, we solved a specific problem where the link lengths were given as L1=12 cm and L2=10 cm, with a target point of (15.7, 12.6). We calculated the necessary joint angles to achieve this position in both the "Above" (Elbow Up) and "Below" (Elbow Down) configurations.
+
+Detailed Solution
+The complete step-by-step mathematical derivation, along with the detailed numerical calculations for the assigned problem, is documented in the attached file.`
   }
 ];

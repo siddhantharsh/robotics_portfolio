@@ -4,6 +4,7 @@ export interface Assignment {
   title: string;
   shortDescription: string;
   videoUrl?: string;
+  pdfUrl?: string;
   inference: string;
   date: string;
 }
