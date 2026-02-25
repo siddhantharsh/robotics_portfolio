@@ -271,6 +271,7 @@ export default function FaultyTerminal({
     const containerRef = useRef<HTMLDivElement>(null);
     const programRef = useRef<Program | null>(null);
     const rendererRef = useRef<Renderer | null>(null);
+    const isVisibleRef = useRef(true);
     const mouseRef = useRef({ x: 0.5, y: 0.5 });
     const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
     const frozenTimeRef = useRef(0);
@@ -294,6 +295,14 @@ export default function FaultyTerminal({
     useEffect(() => {
         const ctn = containerRef.current;
         if (!ctn) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                isVisibleRef.current = entry.isIntersecting;
+            },
+            { threshold: 0 }
+        );
+        observer.observe(ctn);
 
         const renderer = new Renderer({ dpr });
         rendererRef.current = renderer;
@@ -353,6 +362,8 @@ export default function FaultyTerminal({
         const update = (t: number) => {
             rafRef.current = requestAnimationFrame(update);
 
+            if (!isVisibleRef.current) return; // Skip rendering logic when off-screen to save GPU/CPU
+
             if (pageLoadAnimation && loadAnimationStartRef.current === 0) {
                 loadAnimationStartRef.current = t;
             }
@@ -392,6 +403,7 @@ export default function FaultyTerminal({
         if (mouseReact) ctn.addEventListener('mousemove', handleMouseMove);
 
         return () => {
+            observer.disconnect();
             cancelAnimationFrame(rafRef.current);
             resizeObserver.disconnect();
             if (mouseReact) ctn.removeEventListener('mousemove', handleMouseMove);

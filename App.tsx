@@ -4,8 +4,6 @@ import { Menu, X, ArrowUpRight, ChevronRight, Activity, ExternalLink, Mail, Arro
 import { USER_INFO, ASSIGNMENTS } from './constants';
 import { Assignment } from './types';
 import FaultyTerminal from './FaultyTerminal';
-import Squares from './Squares';
-
 // Helper to handle video embedding
 const getEmbedUrl = (url: string) => {
   if (!url) return '';
@@ -297,15 +295,6 @@ const AssignmentPage: React.FC<{ id: string, onNavigate: (path: string) => void 
   return (
     <div className="min-h-screen pt-32 pb-24 px-6 relative overflow-hidden">
       <DarkVeil />
-      <div className="absolute inset-0 z-0">
-        <Squares
-          direction="diagonal"
-          speed={0.5}
-          squareSize={40}
-          borderColor="#271E37"
-          hoverFillColor="#222222"
-        />
-      </div>
 
       <div className="max-w-4xl mx-auto relative z-10 bg-black/40 p-8 md:p-12 rounded-2xl backdrop-blur-md border border-zinc-900/50 shadow-2xl">
         <button
